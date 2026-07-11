@@ -34,14 +34,19 @@
   }
   header { padding: 28px 20px 16px; }
   .topbar {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 26px;
+    justify-content: center;
+    min-height: 118px;
     max-width: 1080px;
     margin: 0 auto;
-    flex-wrap: wrap;
   }
   .brand {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
     display: inline-flex;
     align-items: center;
     text-decoration: none;
@@ -50,12 +55,15 @@
     border-radius: 18px;
     border: 1px solid rgba(255,106,0,.5);
     box-shadow: var(--glow);
-    transition: transform .15s ease, box-shadow .15s ease;
-    flex: none;
+    transition: box-shadow .15s ease;
   }
-  .brand:hover { transform: translateY(-1px); box-shadow: 0 0 32px rgba(255,106,0,.5); }
+  .brand:hover { box-shadow: 0 0 32px rgba(255,106,0,.5); }
   .brand img { height: 84px; width: auto; display: block; }
-  .titleblock { text-align: left; }
+  .titleblock { text-align: center; }
+  @media (max-width: 760px) {
+    .topbar { flex-direction: column; gap: 16px; min-height: 0; }
+    .brand { position: static; transform: none; }
+  }
   header h1 {
     margin: 0;
     font-size: clamp(2rem, 5vw, 3.4rem);
