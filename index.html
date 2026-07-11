@@ -62,12 +62,12 @@
     color: var(--muted);
     font-size: 1.05rem;
   }
-  header p.host {
-    margin-top: 10px;
+  .host-line {
+    margin: 0 0 14px;
+    font-size: .92rem;
     color: var(--accent);
-    font-size: 1.1rem;
-    letter-spacing: .01em;
   }
+  .host-line strong { color: var(--text); }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 60px; }
 
   .controls {
@@ -220,7 +220,6 @@
       <img src="toledocodes-logo.png" alt="Toledo Codes">
     </a>
     <p>Not sure what to play? Search and filter below to find the perfect game for your group.</p>
-    <p class="host"><strong>Host — Mike Vanderpool</strong></p>
   </header>
 
   <div class="wrap">
@@ -259,6 +258,7 @@
       players: "2–4",
       time: "30 min",
       difficulty: "Easy",
+      host: "Mike Vanderpool",
       desc: "Collect gem tokens, buy development cards, and build a chain of discounts to attract nobles. Easy to teach, quick to play, and endlessly replayable.",
       rules: "https://cdn.1j1ju.com/medias/7f/91/ba-splendor-rulebook.pdf",
       youtube: "https://www.youtube.com/watch?v=rue8-jvW4c8"
@@ -440,6 +440,7 @@
           <span class="badge ${diffClass(g.difficulty)}"><span class="dot"></span>${g.difficulty}</span>
         </div>
         <p class="desc">${g.desc}</p>
+        ${g.host ? `<p class="host-line">🎙️ Host: <strong>${g.host}</strong></p>` : ''}
         <div class="meta">
           <span>👥 <b>${g.players}</b> players</span>
           <span>⏱️ <b>${g.time}</b></span>
