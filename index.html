@@ -62,6 +62,12 @@
     color: var(--muted);
     font-size: 1.05rem;
   }
+  header p.host {
+    margin-top: 10px;
+    color: var(--accent);
+    font-size: 1.1rem;
+    letter-spacing: .01em;
+  }
   .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 60px; }
 
   .controls {
@@ -118,7 +124,8 @@
     flex-direction: column;
     transition: transform .15s ease, background .15s ease, border-color .15s ease;
   }
-  .card:hover { transform: translateY(-4px); background: var(--card-hover); border-color: #3d3f75; }
+  .card:hover { transform: translateY(-4px); background: var(--card-hover); border-color: #4a4a4a; }
+  .card.featured { border: 2px solid #fff; box-shadow: 0 0 0 1px #fff, var(--shadow); }
   .cover {
     height: 150px;
     border-radius: 12px;
@@ -213,6 +220,7 @@
       <img src="toledocodes-logo.png" alt="Toledo Codes">
     </a>
     <p>Not sure what to play? Search and filter below to find the perfect game for your group.</p>
+    <p class="host"><strong>Host — Mike Vanderpool</strong></p>
   </header>
 
   <div class="wrap">
@@ -422,7 +430,7 @@
 
   function card(g) {
     return `
-      <article class="card">
+      <article class="card${g.title === 'Splendor' ? ' featured' : ''}">
         ${cover(g)}
         <div class="card-top">
           <div>
