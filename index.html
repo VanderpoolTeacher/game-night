@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Night — Find a Game to Play</title>
+<title>Toledo Codes · Game Night</title>
 <style>
   :root {
     --bg: #0f1020;
@@ -33,8 +33,30 @@
   }
   header {
     text-align: center;
-    padding: 48px 20px 24px;
+    padding: 40px 20px 24px;
   }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--card);
+    margin-bottom: 22px;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .brand:hover { border-color: var(--accent-2); transform: translateY(-1px); }
+  .brand .mark {
+    font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+    font-weight: 800;
+    font-size: .95rem;
+    letter-spacing: -.02em;
+    color: var(--accent-2);
+  }
+  .brand .mark .prompt { color: var(--accent); }
+  .brand .site { color: var(--muted); font-size: .82rem; }
   header h1 {
     margin: 0;
     font-size: clamp(2rem, 5vw, 3.4rem);
@@ -164,6 +186,10 @@
 </head>
 <body>
   <header>
+    <a class="brand" href="https://toledo.codes" target="_blank" rel="noopener">
+      <span class="mark"><span class="prompt">&gt;_</span> Toledo Codes</span>
+      <span class="site">toledo.codes</span>
+    </a>
     <h1>🎲 Game Night</h1>
     <p>Not sure what to play? Search and filter below to find the perfect game for your group.</p>
   </header>
@@ -188,7 +214,9 @@
     <div class="empty" id="empty" style="display:none">No games match your filters. Try clearing the search.</div>
   </div>
 
-  <footer>Add your own games by editing the <code>games</code> list in this file. Happy playing! 🃏</footer>
+  <footer>
+    A <a href="https://toledo.codes" target="_blank" rel="noopener" style="color:var(--accent-2);text-decoration:none">Toledo Codes</a> game night · Add your own games by editing the <code>games</code> list in this file. Happy playing! 🃏
+  </footer>
 
 <script>
   // ── Edit this list to add your own games ──────────────────────────────
