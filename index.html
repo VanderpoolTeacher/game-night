@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Night — Find a Game to Play</title>
+<style>
+  :root {
+    --bg: #0f1020;
+    --bg-2: #171833;
+    --card: #1e1f3d;
+    --card-hover: #262852;
+    --text: #ececf5;
+    --muted: #9a9ac0;
+    --accent: #ff6b6b;
+    --accent-2: #4ecdc4;
+    --border: #2e2f57;
+    --easy: #4ade80;
+    --medium: #fbbf24;
+    --hard: #f87171;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--text);
+    background: radial-gradient(1200px 600px at 10% -10%, #2a2b5a 0%, transparent 55%),
+                radial-gradient(1000px 500px at 100% 0%, #3a1f4d 0%, transparent 50%),
+                var(--bg);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  header {
+    text-align: center;
+    padding: 48px 20px 24px;
+  }
+  header h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    letter-spacing: -.02em;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  header p {
+    margin: 10px auto 0;
+    max-width: 560px;
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px 60px; }
+
+  .controls {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    padding: 16px 0;
+    margin-bottom: 20px;
+    background: linear-gradient(180deg, var(--bg) 70%, transparent);
+    backdrop-filter: blur(4px);
+  }
+  .search {
+    flex: 1 1 240px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+  }
+  .search input {
+    border: 0; outline: 0; background: transparent;
+    color: var(--text); font-size: 1rem; width: 100%;
+  }
+  .search input::placeholder { color: var(--muted); }
+  select {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: .95rem;
+    cursor: pointer;
+  }
+  .count { color: var(--muted); font-size: .9rem; margin-left: auto; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    transition: transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .card:hover { transform: translateY(-4px); background: var(--card-hover); border-color: #3d3f75; }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+  .card h2 { margin: 0; font-size: 1.25rem; }
+  .type {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--accent-2);
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .desc { color: var(--muted); font-size: .95rem; line-height: 1.5; margin: 12px 0 16px; flex: 1; }
+
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: .82rem; color: var(--muted); margin-bottom: 14px; }
+  .meta b { color: var(--text); font-weight: 600; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: .74rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .easy   { background: rgba(74,222,128,.14); color: var(--easy); }
+  .easy .dot { background: var(--easy); }
+  .medium { background: rgba(251,191,36,.14); color: var(--medium); }
+  .medium .dot { background: var(--medium); }
+  .hard   { background: rgba(248,113,113,.14); color: var(--hard); }
+  .hard .dot { background: var(--hard); }
+
+  .links { display: flex; gap: 10px; margin-top: auto; }
+  .btn {
+    flex: 1;
+    text-align: center;
+    text-decoration: none;
+    font-size: .88rem;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: var(--bg-2);
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .btn:hover { border-color: var(--accent-2); }
+  .btn.yt { background: rgba(255,107,107,.12); border-color: rgba(255,107,107,.35); color: #ffb3b3; }
+  .btn.yt:hover { background: rgba(255,107,107,.22); }
+
+  .empty { text-align: center; color: var(--muted); padding: 60px 20px; }
+  footer { text-align: center; color: var(--muted); font-size: .85rem; padding: 30px 20px 50px; }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🎲 Game Night</h1>
+    <p>Not sure what to play? Search and filter below to find the perfect game for your group.</p>
+  </header>
+
+  <div class="wrap">
+    <div class="controls">
+      <label class="search">
+        🔍
+        <input id="search" type="text" placeholder="Search games…" aria-label="Search games">
+      </label>
+      <select id="type" aria-label="Filter by type"></select>
+      <select id="difficulty" aria-label="Filter by difficulty">
+        <option value="">Any difficulty</option>
+        <option value="Easy">Easy to learn</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+      </select>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" style="display:none">No games match your filters. Try clearing the search.</div>
+  </div>
+
+  <footer>Add your own games by editing the <code>games</code> list in this file. Happy playing! 🃏</footer>
+
+<script>
+  // ── Edit this list to add your own games ──────────────────────────────
+  // difficulty: "Easy" | "Medium" | "Hard"
+  // rules: link to a PDF / rulebook / how-to document
+  // youtube: link to a "how to play" video
+  const games = [
+    {
+      title: "Splendor",
+      type: "Strategy / Engine-Building",
+      players: "2–4",
+      time: "30 min",
+      difficulty: "Easy",
+      desc: "Collect gem tokens, buy development cards, and build a chain of discounts to attract nobles. Easy to teach, quick to play, and endlessly replayable.",
+      rules: "https://cdn.1j1ju.com/medias/7f/91/ba-splendor-rulebook.pdf",
+      youtube: "https://www.youtube.com/watch?v=rue8-jvW4c8"
+    },
+    {
+      title: "Codenames",
+      type: "Party / Word",
+      players: "2–8+",
+      time: "15 min",
+      difficulty: "Easy",
+      desc: "Two teams race to identify their secret agents using one-word clues. Great for big, mixed groups.",
+      rules: "https://czechgames.com/files/rules/codenames-rules-en.pdf",
+      youtube: "https://www.youtube.com/watch?v=zQVHkl8oQEU"
+    },
+    {
+      title: "Catan",
+      type: "Strategy / Board",
+      players: "3–4",
+      time: "60–90 min",
+      difficulty: "Medium",
+      desc: "Collect resources, build roads and settlements, and trade your way to victory on a modular island.",
+      rules: "https://www.catan.com/sites/default/files/2021-06/catan_base_rules_2020_200707.pdf",
+      youtube: "https://www.youtube.com/watch?v=8G3W1a4gDoM"
+    },
+    {
+      title: "Ticket to Ride",
+      type: "Strategy / Board",
+      players: "2–5",
+      time: "30–60 min",
+      difficulty: "Easy",
+      desc: "Claim railway routes across the map to connect cities and complete your secret destination tickets.",
+      rules: "https://ncdn0.daysofwonder.com/tickettoride/en/img/tt_rules_2015_en.pdf",
+      youtube: "https://www.youtube.com/watch?v=4JhFhyvGdik"
+    },
+    {
+      title: "Wingspan",
+      type: "Strategy / Engine-Building",
+      players: "1–5",
+      time: "40–70 min",
+      difficulty: "Medium",
+      desc: "Attract a beautiful variety of birds to your wildlife preserve, chaining powers into a scoring engine.",
+      rules: "https://stonemaiergames.com/games/wingspan/rules/",
+      youtube: "https://www.youtube.com/watch?v=lNIf7Yz7HdM"
+    },
+    {
+      title: "Uno",
+      type: "Card / Family",
+      players: "2–10",
+      time: "20–30 min",
+      difficulty: "Easy",
+      desc: "Match colors and numbers, dodge Draw-Fours, and be the first to empty your hand. A classic for all ages.",
+      rules: "https://service.mattel.com/instruction_sheets/42001pr.pdf",
+      youtube: "https://www.youtube.com/watch?v=lXlXPHfYUGw"
+    },
+    {
+      title: "Pandemic",
+      type: "Cooperative / Board",
+      players: "2–4",
+      time: "45 min",
+      difficulty: "Medium",
+      desc: "Work together as a team of specialists to treat outbreaks and cure four diseases before the world falls.",
+      rules: "https://images.zmangames.com/filer_public/25/12/251252dd-1338-4f78-b90d-afe073c72363/zm7101_pandemic_rules.pdf",
+      youtube: "https://www.youtube.com/watch?v=yq3g5Cc4Z1Q"
+    },
+    {
+      title: "Terraforming Mars",
+      type: "Strategy / Engine-Building",
+      players: "1–5",
+      time: "90–120 min",
+      difficulty: "Hard",
+      desc: "Corporations compete to make Mars habitable by raising temperature, oxygen, and ocean levels. Deep and thinky.",
+      rules: "https://www.fryxgames.se/TerraformingMars/TMrules2016.pdf",
+      youtube: "https://www.youtube.com/watch?v=Rp1Up2Dz7SM"
+    },
+    {
+      title: "The Resistance: Avalon",
+      type: "Party / Social Deduction",
+      players: "5–10",
+      time: "30 min",
+      difficulty: "Easy",
+      desc: "Loyal servants and hidden minions battle over missions. Bluff, accuse, and figure out who to trust.",
+      rules: "https://www.ultraboardgames.com/avalon/game-rules.php",
+      youtube: "https://www.youtube.com/watch?v=NcHZOjJl__M"
+    },
+    {
+      title: "Azul",
+      type: "Abstract / Board",
+      players: "2–4",
+      time: "30–45 min",
+      difficulty: "Easy",
+      desc: "Draft colorful tiles to decorate a palace wall while avoiding wasted pieces. Simple rules, sharp decisions.",
+      rules: "https://www.planbgames.com/en/downloads/azul-rules-en.pdf",
+      youtube: "https://www.youtube.com/watch?v=csJL-78NEfg"
+    },
+    {
+      title: "Gloomhaven",
+      type: "Cooperative / Campaign",
+      players: "1–4",
+      time: "90–150 min",
+      difficulty: "Hard",
+      desc: "A sprawling legacy dungeon-crawler with tactical card combat and a branching, evolving campaign.",
+      rules: "https://cdn.shopify.com/s/files/1/2016/0175/files/Gloomhaven-Rulebook.pdf",
+      youtube: "https://www.youtube.com/watch?v=OZ0Ky3O9Wd0"
+    },
+    {
+      title: "Sushi Go!",
+      type: "Card / Family",
+      players: "2–5",
+      time: "15 min",
+      difficulty: "Easy",
+      desc: "Pass hands of sushi cards around the table and grab the best combos. Fast, cute, and beginner-friendly.",
+      rules: "https://www.ultraboardgames.com/sushi-go/game-rules.php",
+      youtube: "https://www.youtube.com/watch?v=Izoc4jHKWWc"
+    },
+    {
+      title: "7 Wonders",
+      type: "Strategy / Card Drafting",
+      players: "3–7",
+      time: "30–45 min",
+      difficulty: "Medium",
+      desc: "Build an ancient civilization by drafting cards across three ages. Scales well and plays fast for its depth.",
+      rules: "https://www.7wonders.net/wp-content/uploads/7-Wonders-rules-EN.pdf",
+      youtube: "https://www.youtube.com/watch?v=WVwd7QNVoxc"
+    }
+  ];
+  // ──────────────────────────────────────────────────────────────────────
+
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  const countEl = document.getElementById('count');
+  const searchEl = document.getElementById('search');
+  const typeEl = document.getElementById('type');
+  const diffEl = document.getElementById('difficulty');
+
+  // Populate the type filter from the data
+  const types = [...new Set(games.map(g => g.type))].sort();
+  typeEl.innerHTML = '<option value="">All types</option>' +
+    types.map(t => `<option value="${t}">${t}</option>`).join('');
+
+  const diffClass = d => ({ Easy: 'easy', Medium: 'medium', Hard: 'hard' }[d] || 'medium');
+
+  function card(g) {
+    return `
+      <article class="card">
+        <div class="card-top">
+          <div>
+            <h2>${g.title}</h2>
+            <div class="type">${g.type}</div>
+          </div>
+          <span class="badge ${diffClass(g.difficulty)}"><span class="dot"></span>${g.difficulty}</span>
+        </div>
+        <p class="desc">${g.desc}</p>
+        <div class="meta">
+          <span>👥 <b>${g.players}</b> players</span>
+          <span>⏱️ <b>${g.time}</b></span>
+        </div>
+        <div class="links">
+          <a class="btn" href="${g.rules}" target="_blank" rel="noopener">📄 How to Play</a>
+          <a class="btn yt" href="${g.youtube}" target="_blank" rel="noopener">▶ Video</a>
+        </div>
+      </article>`;
+  }
+
+  function render() {
+    const q = searchEl.value.trim().toLowerCase();
+    const t = typeEl.value;
+    const d = diffEl.value;
+
+    const filtered = games.filter(g => {
+      const matchesQ = !q || (g.title + ' ' + g.type + ' ' + g.desc).toLowerCase().includes(q);
+      const matchesT = !t || g.type === t;
+      const matchesD = !d || g.difficulty === d;
+      return matchesQ && matchesT && matchesD;
+    });
+
+    grid.innerHTML = filtered.map(card).join('');
+    empty.style.display = filtered.length ? 'none' : 'block';
+    countEl.textContent = `${filtered.length} of ${games.length} games`;
+  }
+
+  searchEl.addEventListener('input', render);
+  typeEl.addEventListener('change', render);
+  diffEl.addEventListener('change', render);
+  render();
+</script>
+</body>
+</html>
