@@ -6,27 +6,28 @@
 <title>Toledo Codes · Game Night</title>
 <style>
   :root {
-    --bg: #0f1020;
-    --bg-2: #171833;
-    --card: #1e1f3d;
-    --card-hover: #262852;
-    --text: #ececf5;
-    --muted: #9a9ac0;
-    --accent: #ff6b6b;
-    --accent-2: #4ecdc4;
-    --border: #2e2f57;
-    --easy: #4ade80;
+    --bg: #050505;
+    --bg-2: #101010;
+    --card: #121212;
+    --card-hover: #1c1c1c;
+    --text: #f4f4f4;
+    --muted: #9a9a9a;
+    --accent: #ff6a00;      /* neon orange */
+    --accent-2: #ff9436;    /* lighter orange */
+    --border: #262626;
+    --easy: #34d399;
     --medium: #fbbf24;
     --hard: #f87171;
-    --shadow: 0 10px 30px rgba(0,0,0,.35);
+    --shadow: 0 10px 30px rgba(0,0,0,.6);
+    --glow: 0 0 24px rgba(255,106,0,.35);
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--text);
-    background: radial-gradient(1200px 600px at 10% -10%, #2a2b5a 0%, transparent 55%),
-                radial-gradient(1000px 500px at 100% 0%, #3a1f4d 0%, transparent 50%),
+    background: radial-gradient(1100px 550px at 12% -10%, rgba(255,106,0,.16) 0%, transparent 55%),
+                radial-gradient(900px 500px at 100% 0%, rgba(255,106,0,.10) 0%, transparent 50%),
                 var(--bg);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
@@ -38,30 +39,22 @@
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
     text-decoration: none;
-    padding: 8px 16px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--card);
-    margin-bottom: 22px;
-    transition: border-color .15s ease, transform .15s ease;
+    margin-bottom: 20px;
+    padding: 12px 22px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid rgba(255,106,0,.5);
+    box-shadow: var(--glow);
+    transition: transform .15s ease, box-shadow .15s ease;
   }
-  .brand:hover { border-color: var(--accent-2); transform: translateY(-1px); }
-  .brand .mark {
-    font-family: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
-    font-weight: 800;
-    font-size: .95rem;
-    letter-spacing: -.02em;
-    color: var(--accent-2);
-  }
-  .brand .mark .prompt { color: var(--accent); }
-  .brand .site { color: var(--muted); font-size: .82rem; }
+  .brand:hover { transform: translateY(-1px); box-shadow: 0 0 32px rgba(255,106,0,.5); }
+  .brand img { height: 60px; width: auto; display: block; }
   header h1 {
     margin: 0;
     font-size: clamp(2rem, 5vw, 3.4rem);
     letter-spacing: -.02em;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    background: linear-gradient(90deg, var(--accent), #ffb066);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -129,6 +122,38 @@
     transition: transform .15s ease, background .15s ease, border-color .15s ease;
   }
   .card:hover { transform: translateY(-4px); background: var(--card-hover); border-color: #3d3f75; }
+  .cover {
+    height: 150px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .cover .emoji {
+    font-size: 3.8rem;
+    line-height: 1;
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,.55));
+    z-index: 1;
+  }
+  .cover .cover-title {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 18px 12px 8px;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.85);
+    text-align: center;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,.55));
+    z-index: 1;
+  }
+  .cover img { width: 100%; height: 100%; object-fit: cover; }
+
   .card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
   .card h2 { margin: 0; font-size: 1.25rem; }
   .type {
@@ -187,10 +212,9 @@
 <body>
   <header>
     <a class="brand" href="https://toledo.codes" target="_blank" rel="noopener">
-      <span class="mark"><span class="prompt">&gt;_</span> Toledo Codes</span>
-      <span class="site">toledo.codes</span>
+      <img src="toledocodes-logo.png" alt="Toledo Codes">
     </a>
-    <h1>🎲 Game Night</h1>
+    <h1>🛡️ Game Night</h1>
     <p>Not sure what to play? Search and filter below to find the perfect game for your group.</p>
   </header>
 
@@ -371,9 +395,38 @@
 
   const diffClass = d => ({ Easy: 'easy', Medium: 'medium', Hard: 'hard' }[d] || 'medium');
 
+  // Themed icon per game (used on the cover banner if no image is set)
+  const icons = {
+    "Splendor": "💎", "Codenames": "🕵️", "Catan": "🏝️", "Ticket to Ride": "🚂",
+    "Wingspan": "🦅", "Uno": "🃏", "Pandemic": "🦠", "Terraforming Mars": "🪐",
+    "The Resistance: Avalon": "⚔️", "Azul": "🔷", "Gloomhaven": "🗡️",
+    "Sushi Go!": "🍣", "7 Wonders": "🏛️"
+  };
+
+  // Deterministic warm-orange hue per title so every cover is distinct but on-theme
+  function hueFor(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) % 360;
+    return 14 + (h % 34); // 14–48° = amber → neon orange range
+  }
+
+  function cover(g) {
+    if (g.image) return `<div class="cover"><img src="${g.image}" alt="${g.title} box art"></div>`;
+    const h = hueFor(g.title);
+    const bg = `radial-gradient(140px 90px at 22% 20%, hsl(${h} 95% 50% / .32), transparent 70%),`
+             + `linear-gradient(140deg, hsl(${h} 80% 12%), #0a0a0a)`;
+    const icon = icons[g.title] || "🛡️";
+    return `<div class="cover">
+              <span style="position:absolute;inset:0;background:${bg}"></span>
+              <span class="emoji">${icon}</span>
+              <span class="cover-title">${g.title}</span>
+            </div>`;
+  }
+
   function card(g) {
     return `
       <article class="card">
+        ${cover(g)}
         <div class="card-top">
           <div>
             <h2>${g.title}</h2>
